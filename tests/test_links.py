@@ -1,0 +1,128 @@
+# -*- coding: UTF-8 -*-
+"""
+Suite(s) of unit tests for the /api/1/links API
+"""
+import unittest
+from unittest.mock import patch
+
+import ujson
+from vlab_api_common import flask_common
+from vlab_api_common.http_auth import generate_test_token
+from jsonschema import Draft4Validator, validate
+
+import vlab_links_api.app as links_app
+from vlab_links_api.lib.views import links
+
+
+class TestLinksView(unittest.TestCase):
+    """A suite of test cases for the /api/1/linnks end point"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Runs once, before any test case"""
+        cls.auth_token = generate_test_token()
+
+    def setUp(self):
+        """Runs before every test case"""
+        links_app.app.config['TESTING'] = True
+        self.app = links_app.app.test_client()
+
+    def test_post_schema(self):
+        """The schema defined for POST on /api/1/links is valid"""
+        try:
+            Draft4Validator.check_schema(links.LinksView.POST_SCHEMA)
+            schema_valid = True
+        except RuntimeError:
+            schema_valid = False
+
+        self.assertTrue(schema_valid)
+
+    def test_post_success_status_code(self):
+        """POST on /api/1/links returns a 200 upon success"""
+        payload = {'url' : 'http://some.url.com'}
+        resp = self.app.post('/api/1/links',
+                             data=ujson.dumps(payload),
+                             content_type='application/json',
+                             headers={'X-Auth' : self.auth_token})
+        expected = 200
+
+        self.assertEqual(resp.status_code, expected)
+
+    def test_post_success_data(self):
+        """POST on /api/1/links returns the expected content data"""
+        payload = {'url' : 'http://some.url.com'}
+        resp = self.app.post('/api/1/links',
+                             data=ujson.dumps(payload),
+                             content_type='application/json',
+                             headers={'X-Auth' : self.auth_token})
+        content = ujson.loads(resp.data)['content']
+        expected = {'lid': '3a628d13f6c4e4f325408da0153e3c87',
+                    'url': 'https://localhost/api/1/links/3a628d13f6c4e4f325408da0153e3c87'}
+
+        #import pdb; pdb.set_trace()
+        self.assertEqual(content, expected)
+
+    @patch.object(flask_common, 'logger')
+    def test_post_no_body(self, fake_logger):
+        """POST on /api/1/links returns a 400 if not supplied with any body content"""
+        resp = self.app.post('/api/1/links',
+                             data=ujson.dumps({}),
+                             content_type='application/json',
+                             headers={'X-Auth' : self.auth_token})
+        expected = 400
+
+        self.assertEqual(resp.status_code, expected)
+
+    @patch.object(flask_common, 'logger')
+    def test_post_invalid_body(self, fake_logger):
+        """POST on /api/1/links returns a 400 if supplied with invalid body content"""
+        payload = {'doh' : ['http://some.url.com']}
+        resp = self.app.post('/api/1/links',
+                             data=ujson.dumps(payload),
+                             content_type='application/json',
+                             headers={'X-Auth' : self.auth_token})
+        expected = 400
+
+        self.assertEqual(resp.status_code, expected)
+
+    def test_get_no_link(self):
+        """GET on /api/1/links/<lid> returns 404 if <lid> is not a known stored link"""
+        resp = self.app.get('/api/1/links/notalink')
+        expected = 404
+
+        self.assertEqual(resp.status_code, expected)
+
+    def test_get_link_found(self):
+        """GET on /api/1/links/<lid> returns a 301 redirect when <lid> is a known stored link"""
+        payload = {'url' : 'http://some.url.com'}
+        resp = self.app.post('/api/1/links',
+                             data=ujson.dumps(payload),
+                             content_type='application/json',
+                             headers={'X-Auth' : self.auth_token})
+        content = ujson.loads(resp.data)['content']
+        valid_link = '/api/1/links/' + content['lid']
+
+        resp2 = self.app.get(valid_link)
+        expected = 301
+
+        self.assertEqual(resp2.status_code, expected)
+
+    def test_get_describe(self):
+        """GET on /api/1/links work when supplied with the describe param"""
+        resp = self.app.get('/api/1/links?describe=true',
+                            headers={'X-Auth' : self.auth_token})
+        expected = 200
+
+        self.assertEqual(resp.status_code, expected)
+
+    def test_get_describe_no_param(self):
+        """GET on /api/1/links returns 405 when not supplied with the describe param"""
+        resp = self.app.get('/api/1/links',
+                            headers={'X-Auth' : self.auth_token})
+        expected = 405
+
+        self.assertEqual(resp.status_code, expected)
+
+
+if __name__ == '__main__':
+    unittest.main()
