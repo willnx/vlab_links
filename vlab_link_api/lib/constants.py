@@ -7,8 +7,8 @@ from collections import namedtuple, OrderedDict
 
 
 DEFINED = OrderedDict([
-            ('LINKS_LOG_LEVEL', environ.get('LINKS_LOG_LEVEL', 'INFO')),
-            ('LINKS_MAX_COUNT', int(environ.get('LINKS_MAX_COUNT', 1000))),
+            ('LINK_LOG_LEVEL', environ.get('LINK_LOG_LEVEL', 'INFO')),
+            ('LINK_MAX_COUNT', int(environ.get('LINK_MAX_COUNT', 1000))),
             ('VLAB_URL', 'https://localhost')
           ])
 

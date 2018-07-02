@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 """
-Defines API for '/api/1/links' end point
+Defines API for '/api/1/link' end point
 """
 import hashlib
 from collections import deque
@@ -11,16 +11,16 @@ from flask_classy import route
 from vlab_api_common import BaseView, describe, get_logger, validate_input
 from vlab_api_common.http_auth import requires
 
-from vlab_links_api.lib import const
+from vlab_link_api.lib import const
 
-logger = get_logger(__name__, loglevel=const.LINKS_LOG_LEVEL)
+logger = get_logger(__name__, loglevel=const.LINK_LOG_LEVEL)
 
 
 
-class LinksView(BaseView):
+class LinkView(BaseView):
     """End point for the Links URL shortner"""
-    route_base = '/api/1/links'
-    STORED_LINKS = deque(maxlen=const.LINKS_MAX_COUNT)
+    route_base = '/api/1/link'
+    STORED_LINKS = deque(maxlen=const.LINK_MAX_COUNT)
     POST_SCHEMA = {"$schema" : "http://json-schema.org/draft-04/schema#",
                    "type" : "object",
                    "properties" : {
@@ -38,7 +38,7 @@ class LinksView(BaseView):
         """This end point only exists so users can obtain the API schema"""
         token = kwargs.get('token')
         return ujson.dumps({'error': 'GET method is only used with param describe',
-                            'next': [url_for('LinksView:get', describe=True)],
+                            'next': [url_for('LinkView:get', describe=True)],
                             'user': token.get('username')}), 405
 
     @route('/<lid>', methods=['GET'])
