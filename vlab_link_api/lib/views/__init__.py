@@ -1,3 +1,3 @@
 # -*- coding: UTF-8 -*-
-from .links import LinksView
+from .link import LinkView
 from .healthcheck import HealthView

@@ -11,7 +11,7 @@ from flask_classy import FlaskView
 
 class HealthView(FlaskView):
     """Logic for checking service health"""
-    route_base = '/api/1/links/healthcheck'
+    route_base = '/api/1/link/healthcheck'
     trailing_slash = False
 
     def get(self):

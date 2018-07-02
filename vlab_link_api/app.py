@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 from flask import Flask
-from vlab_links_api.lib.views import LinksView, HealthView
+from vlab_link_api.lib.views import LinkView, HealthView
 
 app = Flask(__name__)
-LinksView.register(app)
+LinkView.register(app)
 HealthView.register(app)
 
 

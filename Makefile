@@ -13,10 +13,10 @@ install: uninstall build
 	pip install dist/*.whl
 
 uninstall:
-	-pip uninstall -y vlab-links-api
+	-pip uninstall -y vlab-link-api
 
 test: uninstall install
-	cd tests && nosetests -v --with-coverage --cover-package=vlab_links_api
+	cd tests && nosetests -v --with-coverage --cover-package=vlab_link_api
 
 images: build
-	docker build -t willnx/vlab-links-api .
+	docker build -t willnx/vlab-link-api .
