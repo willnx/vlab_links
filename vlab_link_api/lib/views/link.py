@@ -32,7 +32,7 @@ class LinkView(BaseView):
                     "required" : [ "url" ]
                   }
 
-    @requires(verify=False)
+    @requires(verify=False, version=(1,2))
     @describe(post=POST_SCHEMA)
     def get(self, *args, **kwargs):
         """This end point only exists so users can obtain the API schema"""
@@ -61,7 +61,7 @@ class LinkView(BaseView):
             resp['params'] = {'lid' : lid}
             return ujson.dumps(resp), 404
 
-    @requires(verify=False)
+    @requires(verify=False, version=(1,2))
     @validate_input(schema=POST_SCHEMA)
     def post(self, *args, **kwargs):
         """Create a new shortend URL"""
