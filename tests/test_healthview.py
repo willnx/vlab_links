@@ -4,7 +4,7 @@ A simple set of tests for the health check functionality.
 """
 import unittest
 
-import vlab_link_api.app as links_app
+import vlab_link_api.app as link_app
 
 
 class TestHealthView(unittest.TestCase):

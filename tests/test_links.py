@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 """
-Suite(s) of unit tests for the /api/1/links API
+Suite(s) of unit tests for the /api/1/link API
 """
 import unittest
 from unittest.mock import patch
@@ -10,8 +10,8 @@ from vlab_api_common import flask_common
 from vlab_api_common.http_auth import generate_test_token
 from jsonschema import Draft4Validator, validate
 
-import vlab_link_api.app as links_app
-from vlab_link_api.lib.views import links
+import vlab_link_api.app as link_app
+from vlab_link_api.lib.views import link
 
 
 class TestLinkView(unittest.TestCase):
@@ -30,7 +30,7 @@ class TestLinkView(unittest.TestCase):
     def test_post_schema(self):
         """The schema defined for POST on /api/1/link is valid"""
         try:
-            Draft4Validator.check_schema(links.LinkView.POST_SCHEMA)
+            Draft4Validator.check_schema(link.LinkView.POST_SCHEMA)
             schema_valid = True
         except RuntimeError:
             schema_valid = False
@@ -57,7 +57,7 @@ class TestLinkView(unittest.TestCase):
                              headers={'X-Auth' : self.auth_token})
         content = ujson.loads(resp.data)['content']
         expected = {'lid': '3a628d13f6c4e4f325408da0153e3c87',
-                    'url': 'https://localhost/api/1/links/3a628d13f6c4e4f325408da0153e3c87'}
+                    'url': 'https://localhost/api/1/link/3a628d13f6c4e4f325408da0153e3c87'}
 
         self.assertEqual(content, expected)
 

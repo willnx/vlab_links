@@ -17,5 +17,5 @@ class HealthView(FlaskView):
     def get(self):
         """API end point for checking service health"""
         stime = time()
-        version = pkg_resources.get_distribution('vlab-links-api').version
+        version = pkg_resources.get_distribution('vlab-link-api').version
         return ujson.dumps({'latency' : time() - stime, 'version' : version})
