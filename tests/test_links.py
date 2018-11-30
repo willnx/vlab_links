@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import ujson
 from vlab_api_common import flask_common
-from vlab_api_common.http_auth import generate_test_token
+from vlab_api_common.http_auth import generate_v2_test_token
 from jsonschema import Draft4Validator, validate
 
 import vlab_link_api.app as link_app
@@ -20,7 +20,7 @@ class TestLinkView(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Runs once, before any test case"""
-        cls.auth_token = generate_test_token()
+        cls.auth_token = generate_v2_test_token(username='bob')
 
     def setUp(self):
         """Runs before every test case"""
