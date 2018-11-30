@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(name="vlab-link-api",
       author="Nicholas Willhite,",
-      version='0.0.1',
+      version='2018.11.30',
       packages=find_packages(),
       include_package_data=True,
       description="Simplest URL shortner imaginable",
