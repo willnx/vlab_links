@@ -1,3 +1,8 @@
+.. image:: https://travis-ci.org/willnx/vlab_links.svg?branch=master
+    :target: https://travis-ci.org/willnx/vlab_links
+
+.. _link-service:
+
 ##############
 vLab Links API
 ##############
